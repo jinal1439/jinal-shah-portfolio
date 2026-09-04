@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jinal Shah — Data Scientist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0A0A0A;
+    --bg-alt: #111111;
+    --surface: #161616;
+    --surface-hi: #1E1E1E;
+    --line: #2A2A2A;
+    --text: #F2F2F0;
+    --text-muted: #8E8E8E;
+    --amber: #E8A33D;
+    --amber-soft: rgba(232,163,61,0.14);
+    --cyan: #4FD1C5;
+    --radius: 10px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:'Space Grotesk', sans-serif;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+  a{color:inherit;}
+
+  /* ---------- layout shells ---------- */
+  .wrap{max-width:1100px; margin:0 auto; padding:0 32px;}
+  section{padding:96px 0;}
+  @media (max-width:640px){ section{padding:64px 0;} .wrap{padding:0 20px;} }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    backdrop-filter:blur(10px);
+    background:rgba(10,10,10,0.75);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:64px;}
+  .logo{font-family:'Space Grotesk'; font-weight:700; font-size:18px; letter-spacing:0.02em;}
+  .logo span{color:var(--amber);}
+  .nav-links{display:flex; gap:28px; list-style:none;}
+  .nav-links a{
+    font-size:14px; color:var(--text-muted); text-decoration:none;
+    font-family:'JetBrains Mono'; letter-spacing:0.02em;
+    transition:color .2s ease;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible{color:var(--amber);}
+  @media (max-width:640px){ .nav-links{display:none;} }
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:100svh; display:flex; align-items:center;
+    padding-top:64px; position:relative;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.15fr 0.85fr; gap:48px; align-items:center;
+  }
+  @media (max-width:860px){ .hero-grid{grid-template-columns:1fr;} .hero-canvas{order:-1; height:260px;} }
+
+  .eyebrow{
+    font-family:'JetBrains Mono'; font-size:13px; color:var(--amber);
+    letter-spacing:0.12em; text-transform:uppercase; margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{
+    content:''; width:8px; height:8px; border-radius:50%;
+    background:var(--amber); box-shadow:0 0 0 4px var(--amber-soft);
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.4;} }
+
+  .hero h1{
+    font-size:clamp(40px, 6vw, 68px); font-weight:700; line-height:1.05;
+    letter-spacing:-0.02em; margin-bottom:20px;
+  }
+  .hero h1 em{
+    font-style:normal; color:var(--amber);
+    background:linear-gradient(180deg, transparent 62%, var(--amber-soft) 62%);
+  }
+  .hero p.lead{
+    font-size:17px; color:var(--text-muted); max-width:52ch; margin-bottom:32px;
+  }
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    font-family:'JetBrains Mono'; font-size:14px; padding:13px 22px; border-radius:8px;
+    text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    border:1px solid var(--line); transition:all .2s ease;
+  }
+  .btn-primary{background:var(--amber); color:#1A1103; border-color:var(--amber); font-weight:500;}
+  .btn-primary:hover{background:#f0b055; transform:translateY(-2px);}
+  .btn-ghost{color:var(--text); background:transparent;}
+  .btn-ghost:hover{border-color:var(--cyan); color:var(--cyan);}
+
+  .hero-canvas{position:relative; height:420px;}
+  #netCanvas{width:100%; height:100%; display:block;}
+
+  /* ---------- section headers ---------- */
+  .sec-head{display:flex; align-items:baseline; gap:16px; margin-bottom:40px;}
+  .sec-num{font-family:'JetBrains Mono'; color:var(--amber); font-size:14px;}
+  .sec-head h2{font-size:clamp(26px,3.5vw,34px); font-weight:600;}
+  .sec-head .rule{flex:1; height:1px; background:var(--line);}
+
+  /* ---------- about ---------- */
+  .about-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px;}
+  @media (max-width:760px){ .about-grid{grid-template-columns:1fr;} }
+  .about-grid p{color:var(--text-muted); margin-bottom:16px;}
+  .stat-list{display:flex; flex-direction:column; gap:22px;}
+  .stat{display:flex; gap:16px; align-items:flex-start; padding:18px 20px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);}
+  .stat .n{font-family:'Space Grotesk'; font-size:26px; font-weight:700; color:var(--amber); min-width:56px;}
+  .stat .l{font-size:14px; color:var(--text-muted);}
+
+  /* ---------- skills ---------- */
+  .skill-groups{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  @media (max-width:760px){ .skill-groups{grid-template-columns:1fr 1fr;} }
+  @media (max-width:480px){ .skill-groups{grid-template-columns:1fr;} }
+  .skill-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px;}
+  .skill-card h3{font-size:14px; font-family:'JetBrains Mono'; color:var(--cyan); margin-bottom:14px; text-transform:uppercase; letter-spacing:.06em;}
+  .chip-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{
+    font-size:13px; padding:6px 11px; border-radius:20px; background:var(--bg-alt);
+    border:1px solid var(--line); color:var(--text); font-family:'JetBrains Mono';
+  }
+
+  /* ---------- experience timeline ---------- */
+  .timeline{border-left:2px solid var(--line); margin-left:6px; padding-left:32px; display:flex; flex-direction:column; gap:36px;}
+  .t-item{position:relative;}
+  .t-item::before{
+    content:''; position:absolute; left:-39px; top:4px; width:12px; height:12px;
+    border-radius:50%; background:var(--amber); box-shadow:0 0 0 4px var(--amber-soft);
+  }
+  .t-item .role{font-size:19px; font-weight:600; font-family:'Space Grotesk';}
+  .t-item .org{color:var(--cyan); font-size:14px; font-family:'JetBrains Mono'; margin-bottom:2px;}
+  .t-item .when{color:var(--text-muted); font-size:13px; font-family:'JetBrains Mono'; margin-bottom:12px;}
+  .t-item ul{list-style:none; display:flex; flex-direction:column; gap:8px;}
+  .t-item li{color:var(--text-muted); font-size:15px; padding-left:18px; position:relative;}
+  .t-item li::before{content:'—'; position:absolute; left:0; color:var(--line);}
+
+  /* ---------- projects ---------- */
+  .proj-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  @media (max-width:900px){ .proj-grid{grid-template-columns:1fr;} }
+  .proj-card{
+    position:relative; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:26px; overflow:hidden; transition:transform .25s ease, border-color .25s ease;
+  }
+  .proj-card:hover{ transform:translateY(-4px); border-color:var(--amber); }
+  .proj-card::after{
+    content:''; position:absolute; top:0; left:-140%; width:60%; height:100%;
+    background:linear-gradient(100deg, transparent, rgba(232,163,61,0.16), transparent);
+    transition:left .8s ease;
+    pointer-events:none;
+  }
+  .proj-card:hover::after{ left:140%; }
+  .proj-tag{font-family:'JetBrains Mono'; font-size:12px; color:var(--amber); margin-bottom:10px; display:block;}
+  .proj-card h3{font-size:19px; margin-bottom:12px; line-height:1.3;}
+  .proj-card ul{list-style:none; display:flex; flex-direction:column; gap:7px; margin-bottom:16px;}
+  .proj-card li{font-size:14px; color:var(--text-muted); padding-left:16px; position:relative;}
+  .proj-card li::before{content:'·'; position:absolute; left:0; color:var(--cyan); font-weight:700;}
+  .tech-row{display:flex; flex-wrap:wrap; gap:6px;}
+  .tech-row span{font-size:11px; font-family:'JetBrains Mono'; color:var(--text-muted); border:1px solid var(--line); padding:3px 8px; border-radius:12px;}
+  .proj-links{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;}
+  .proj-link{
+    font-family:'JetBrains Mono'; font-size:12px; padding:8px 14px; border-radius:8px;
+    text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+    border:1px solid var(--line); transition:all .2s ease; position:relative; z-index:1;
+  }
+  .proj-link.gh{color:var(--text); background:transparent;}
+  .proj-link.gh:hover{border-color:var(--cyan); color:var(--cyan);}
+  .proj-link.demo{background:var(--amber); color:#1A1103; border-color:var(--amber); font-weight:500;}
+  .proj-link.demo:hover{background:#f0b055; transform:translateY(-2px);}
+
+  /* ---------- education & certs ---------- */
+  .ed-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+  @media (max-width:760px){ .ed-grid{grid-template-columns:1fr;} }
+  .card-plain{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:24px;}
+  .card-plain h3{font-size:17px; margin-bottom:6px;}
+  .card-plain .sub{color:var(--text-muted); font-size:14px; margin-bottom:14px;}
+  .cert-list{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .cert-list li{font-size:14px; color:var(--text-muted); display:flex; gap:10px; align-items:flex-start;}
+  .cert-list li::before{content:'✓'; color:var(--cyan); font-family:'JetBrains Mono';}
+
+  /* ---------- footer / contact ---------- */
+  footer{border-top:1px solid var(--line); padding:64px 0 40px;}
+  .foot-grid{display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; align-items:center;}
+  footer h2{font-size:clamp(24px,4vw,36px); max-width:14ch; margin-bottom:8px;}
+  footer p{color:var(--text-muted); font-size:14px;}
+  .foot-links{display:flex; gap:18px; flex-wrap:wrap;}
+  .foot-links a{font-family:'JetBrains Mono'; font-size:14px; text-decoration:none; color:var(--text-muted); border-bottom:1px solid transparent; padding-bottom:2px; transition:.2s;}
+  .foot-links a:hover{color:var(--amber); border-color:var(--amber);}
+  .copyline{margin-top:40px; font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono'; opacity:.6;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">JINAL<span>·</span>SHAH</div>
+    <ul class="nav-links">
+      <li><a href="#about">about</a></li>
+      <li><a href="#skills">skills</a></li>
+      <li><a href="#experience">experience</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#education">education</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">open to data science roles</div>
+      <h1>Turning raw data<br>into models that<br><em>see, read & predict.</em></h1>
+      <p class="lead">I'm Jinal Shah, a Data Scientist based in Ahmedabad building computer-vision and NLP systems — from a glaucoma-detecting CNN to a chatbot that understands intent — and shipping them as real web apps.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#projects">View Projects →</a>
+        <a class="btn btn-ghost" href="mailto:jinal.shah14399@gmail.com">Get in touch</a>
+      </div>
+    </div>
+    <div class="hero-canvas">
+      <canvas id="netCanvas"></canvas>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">01</span><h2>About</h2><div class="rule"></div></div>
+    <div class="about-grid">
+      <div>
+        <p>Data Scientist with a strong interest in Machine Learning, Data Analytics, and Python programming. Skilled in data visualization, statistical analysis, and problem-solving with hands-on academic and internship projects.</p>
+        <p>Eager to apply analytical skills and learn new technologies in a growth-oriented organization — currently deepening expertise in deep learning architectures (CNN, LSTM) and deploying models as usable Django applications.</p>
+      </div>
+      <div class="stat-list">
+        <div class="stat"><div class="n">3+</div><div class="l">Deep learning projects shipped — from retinal image classification to conversational NLP.</div></div>
+        <div class="stat"><div class="n">2</div><div class="l">Transfer-learning architectures used in production-style prototypes (EfficientNetV2B0, DenseNet121).</div></div>
+        <div class="stat"><div class="n">BCA</div><div class="l">Bachelor of Computer Applications, Saurashtra University.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Skills</h2><div class="rule"></div></div>
+    <div class="skill-groups">
+      <div class="skill-card">
+        <h3>Languages</h3>
+        <div class="chip-row"><span class="chip">Python</span><span class="chip">SQL</span></div>
+      </div>
+      <div class="skill-card">
+        <h3>ML / DL</h3>
+        <div class="chip-row"><span class="chip">Machine Learning</span><span class="chip">Deep Learning</span><span class="chip">CNN</span><span class="chip">LSTM</span><span class="chip">NLP</span></div>
+      </div>
+      <div class="skill-card">
+        <h3>Frameworks &amp; Libraries</h3>
+        <div class="chip-row"><span class="chip">TensorFlow</span><span class="chip">Keras</span><span class="chip">Scikit-learn</span><span class="chip">Pandas</span><span class="chip">NumPy</span><span class="chip">Matplotlib</span><span class="chip">OpenCV</span></div>
+      </div>
+      <div class="skill-card">
+        <h3>Data &amp; Visualization</h3>
+        <div class="chip-row"><span class="chip">Data Analysis</span><span class="chip">Statistics</span><span class="chip">Power BI</span><span class="chip">Excel</span></div>
+      </div>
+      <div class="skill-card">
+        <h3>Tools / IDEs</h3>
+        <div class="chip-row"><span class="chip">Google Colab</span><span class="chip">Jupyter</span><span class="chip">PyCharm</span></div>
+      </div>
+      <div class="skill-card">
+        <h3>Web</h3>
+        <div class="chip-row"><span class="chip">Django</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Experience</h2><div class="rule"></div></div>
+    <div class="timeline">
+      <div class="t-item">
+        <div class="role">Data Scientist</div>
+        <div class="org">Sparks To Ideas, Ahmedabad, Gujarat</div>
+        <div class="when">December 2025 — Present</div>
+        <ul>
+          <li>Working on Data Science and Machine Learning concepts using Python.</li>
+          <li>Analyzing datasets with Pandas and NumPy for cleaning and exploration.</li>
+          <li>Creating data visualizations with Matplotlib to communicate insights.</li>
+          <li>Implementing Machine Learning models using Scikit-learn.</li>
+          <li>Completing real-world mini projects applying Python and ML techniques.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Featured Projects</h2><div class="rule"></div></div>
+    <div class="proj-grid">
+      <div class="proj-card">
+        <span class="proj-tag">Computer Vision · Medical Imaging</span>
+        <h3>Glaucoma Detection Using CNN &amp; Transfer Learning</h3>
+        <ul>
+          <li>Deep learning model detecting glaucoma from retinal fundus images.</li>
+          <li>EfficientNetV2B0 &amp; DenseNet121 built on TensorFlow/Keras.</li>
+          <li>Image preprocessing and augmentation to boost accuracy.</li>
+          <li>Django web app for image upload and live prediction.</li>
+        </ul>
+        <div class="tech-row"><span>Python</span><span>TensorFlow</span><span>Keras</span><span>OpenCV</span><span>Django</span></div>
+        <div class="proj-links">
+          <a class="proj-link gh" href="https://github.com/jinal1439/glaucoma-detection-django.git" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub
+          </a>
+          <a class="proj-link demo" href="https://glaucoma-detection-django.onrender.com" target="_blank" rel="noopener">
+            Live Demo ↗
+          </a>
+        </div>
+      </div>
+      <div class="proj-card">
+        <span class="proj-tag">Computer Vision</span>
+        <h3>Face Recognition System Using CNN</h3>
+        <ul>
+          <li>CNN-based system for face image classification.</li>
+          <li>Preprocessing, normalization and full model training pipeline.</li>
+          <li>Evaluated with accuracy and loss metrics.</li>
+        </ul>
+        <div class="tech-row"><span>Python</span><span>TensorFlow</span><span>Keras</span><span>OpenCV</span></div>
+        <div class="proj-links">
+          <a class="proj-link gh" href="https://github.com/jinal1439/face-recognition-django.git" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub
+          </a>
+          <a class="proj-link demo" href="https://face-recognition-django-1.onrender.com" target="_blank" rel="noopener">
+            Live Demo ↗
+          </a>
+        </div>
+      </div>
+      <div class="proj-card">
+        <span class="proj-tag">NLP · Conversational AI</span>
+        <h3>NLP Chatbot</h3>
+        <ul>
+          <li>Chatbot answering user queries via Natural Language Processing.</li>
+          <li>Text preprocessing, tokenization &amp; intent classification.</li>
+          <li>Neural network model deployed with a Django web interface.</li>
+        </ul>
+        <div class="tech-row"><span>Python</span><span>TensorFlow</span><span>NLTK</span><span>Django</span></div>
+        <div class="proj-links">
+          <a class="proj-link gh" href="https://github.com/jinal1439/ChatBot/" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub
+          </a>
+          <a class="proj-link demo" href="https://chatbot-ytqx.onrender.com/" target="_blank" rel="noopener">
+            Live Demo ↗
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Education &amp; Certifications</h2><div class="rule"></div></div>
+    <div class="ed-grid">
+      <div class="card-plain">
+        <h3>Bachelor of Computer Applications (BCA)</h3>
+        <div class="sub">Smt S.J. Varmora BBA &amp; BCA Mahila College, Surendranagar, Gujarat — Affiliated with Saurashtra University</div>
+      </div>
+      <div class="card-plain">
+        <h3>Certifications</h3>
+        <ul class="cert-list">
+          <li>BCA Degree Certificate — Saurashtra University</li>
+          <li>Python for Machine Learning — Great Learning (Online)</li>
+          <li>Data Science Training — Sparks To Ideas</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h2>Let's build something with data.</h2>
+        <p>Ahmedabad, Gujarat, India</p>
+      </div>
+      <div class="foot-links">
+        <a href="mailto:jinal.shah14399@gmail.com">jinal.shah14399@gmail.com</a>
+        <a href="tel:+916351685989">+91 63516 85989</a>
+        <a href="https://linkedin.com/in/jinal-shah4a0959214" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+    </div>
+    <div class="copyline">© 2026 Jinal Shah. Built with data, coffee &amp; a lot of debugging.</div>
+  </div>
+</footer>
+
+<script>
+// Signature hero visual: an animated neural-network graph — nodes pulse and
+// connections fire like activations, echoing the CNN/NLP work described above.
+(function(){
+  const canvas = document.getElementById('netCanvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, dpr;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resize(){
+    dpr = window.devicePixelRatio || 1;
+    w = canvas.clientWidth; h = canvas.clientHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const layers = [3, 5, 5, 2];
+  const nodes = [];
+  layers.forEach((count, li) => {
+    const x = (li / (layers.length - 1)) * (w * 0.86) + w * 0.07;
+    for(let i=0;i<count;i++){
+      const y = ((i+1) / (count+1)) * h;
+      nodes.push({x, y, li, phase: Math.random()*Math.PI*2, r: 4 + Math.random()*2});
+    }
+  });
+
+  function layerNodes(li){ return nodes.filter(n => n.li === li); }
+
+  const edges = [];
+  for(let li=0; li<layers.length-1; li++){
+    layerNodes(li).forEach(a=>{
+      layerNodes(li+1).forEach(b=>{
+        edges.push({a,b, phase: Math.random()*Math.PI*2, speed: 0.6+Math.random()*0.8});
+      });
+    });
+  }
+
+  const amber = '232,163,61';
+  const cyan = '79,209,197';
+
+  function draw(t){
+    ctx.clearRect(0,0,w,h);
+
+    edges.forEach(e=>{
+      const pulse = reduceMotion ? 0.5 : (Math.sin(t*0.001*e.speed + e.phase) + 1) / 2;
+      ctx.strokeStyle = `rgba(${amber}, ${0.06 + pulse*0.18})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(e.a.x, e.a.y);
+      ctx.lineTo(e.b.x, e.b.y);
+      ctx.stroke();
+
+      if(!reduceMotion && pulse > 0.82){
+        const px = e.a.x + (e.b.x - e.a.x) * ((t*0.0006*e.speed) % 1);
+        const py = e.a.y + (e.b.y - e.a.y) * ((t*0.0006*e.speed) % 1);
+        ctx.fillStyle = `rgba(${cyan}, 0.9)`;
+        ctx.beginPath();
+        ctx.arc(px, py, 1.6, 0, Math.PI*2);
+        ctx.fill();
+      }
+    });
+
+    nodes.forEach(n=>{
+      const glow = reduceMotion ? 0.6 : (Math.sin(t*0.0015 + n.phase) + 1) / 2;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r + glow*2, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${amber}, ${0.12 + glow*0.1})`;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r*0.55, 0, Math.PI*2);
+      ctx.fillStyle = '#EAF3F2';
+      ctx.fill();
+    });
+
+    if(!reduceMotion) requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>
+
+</body>
+</html>
